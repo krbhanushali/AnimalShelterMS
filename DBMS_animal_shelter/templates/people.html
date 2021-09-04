@@ -1,0 +1,42 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+<div class="search bar">
+  <h3>Search for Person</h3>
+  <br>
+  <form method="post" action="">
+    <p>Search by FirstName or LastName</p>
+     <input type="text" name="query" default="all" value="{{
+        request.form.query }}">
+    <input class="btn btn-default" type="submit" value="Search">
+  </form>
+</div>
+
+<div class="results_table">
+  <h3>People Added</h3>
+  <br>
+  <table>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Phone Number</th>
+    <th>Email</th>
+    <th>Address</th>
+    <th>Link</th>
+  </tr>
+  {% for post in posts.items %}
+    <tr>
+      <th>{{post.FirstName}}</th>
+      <th>{{post.LastName}}</th>
+      <th>{{post.Phone}}</th>
+      <th>{{post.Email}}</th>
+      <th>{{post.Address}}</th>
+      <th><a href = "{{url_for('person', id = post.PersonID)}}">details</a></th>
+    </tr>
+  {% endfor %}
+  </table>
+  {% if posts.has_prev %}<a href="{{ url_for('people', page=posts.prev_num) }}">&lt;&lt; Previous</a>{% else %}&lt;&lt; Previous{% endif %} |
+  {% if posts.has_next %}<a href="{{ url_for('people', page=posts.next_num) }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
+</div>
+
+{% endblock %}
