@@ -11,12 +11,16 @@
       request.form.dob }}"></p>
     <p>Breed: <input type="text" placeholder="Breed" name="breed" value="{{
       request.form.breed }}"></p>
-    <p>Gender: <input type="text" required placeholder="Gender" name="gender" value="{{
-      request.form.gender }}"></p>
+    <p>Gender:
+      <input type="radio" name="gender" id="male" value="M"> Male </input>
+      <input type="radio" name="gender" id="female" value="F"> Female </input>
+    </p>
     <p>Weight: <input type="number" placeholder="Weight" name="weight" value="{{
       request.form.weight }}"></p>
-    <p>Healthy: <input type="number" placeholder="healthy:1" name="healthy" value="{{
-      request.form.healthy }}"></p>  
+    <p>Healthy:
+      <input type="radio" name="healthy" id="healthy" value=1> Yes </input>
+      <input type="radio" name="healthy" id="nothealthy" value=0> No </input>
+    </p>
     <input class="btn btn-default" type="submit" value="Insert">
   </form>
   {% if error %}
