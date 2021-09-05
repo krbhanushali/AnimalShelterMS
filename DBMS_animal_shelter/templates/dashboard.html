@@ -1,5 +1,32 @@
 {% extends "base_dashboard.html" %}
 
 {% block content %}
-<p>abba jabba dabba</p>
+<h3>New Entries</h3>
+<a href="{{url_for('new_animal')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="Add new animal">
+</a>
+<a href="{{url_for('new_employee')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="Add new employee">
+</a>
+<a href="{{url_for('new_vet')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="Add new vet">
+</a>
+<a href="{{url_for('new_person')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="Add new person">
+</a>
+<a href="{{url_for('new_person')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="Assign Tasks">
+</a>
+<a href="{{url_for('new_person')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="New Adoption">
+</a>
+<a href="{{url_for('new_person')}}">
+    <input class="btn btn-primary btn-large" type="submit" value="New Medical Record">
+</a>
+
+<h3>Tasks to be assigned</h3>
+<h3>Employees without tasks</h3>
+<h3>Up for Adoption</h3>
+<h3>Sick Animals</h3>
+
 {% endblock %}

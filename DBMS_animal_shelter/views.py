@@ -18,6 +18,9 @@ Person = Base.classes.person
 Employee = Base.classes.employee
 Vet = Base.classes.vet
 Animal = Base.classes.animal
+MedicalRecords = Base.classes.medicalrecords
+Tasks = Base.classes.dailytasks
+Adoptions = Base.classes.adoptions
 # use Base.classes.<table name> for the class
 
 @app.route('/login', methods = ['POST', 'GET'])
