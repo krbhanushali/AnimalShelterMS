@@ -1,20 +1,23 @@
 {% extends "base_dashboard.html" %}
 
 {% block content %}
-<div class="search bar">
-  <h3>Search for Employee</h3>
+<div class="container">
+  <h3>Add New Employee</h3>
   <br>
-  <form method="post" action="">
-    <p>Search by FirstName or LastName</p>
-     <input type="text" name="query" default="all" value="{{
-        request.form.query }}">
-    <input class="btn btn-default" type="submit" value="Search">
+  <form action="" method="post">
+    <p>The Registration ID: <input type="number" required placeholder="PersonID" name="pID" value="{{
+      request.form.pID }}"></p>
+    <p>Immediate Senior: <input type="number" placeholder="WorkerID" name="sID" value="{{
+      request.form.sID }}"></p>
+    <p>Salary: <input type="number" min="0" step="0.1" placeholder="salary" name="salary" value="{{
+      request.form.salary }}"></p>
+    <p>Company email: <input type="email" placeholder="email" name="compEmail" value="{{
+      request.form.compEmail }}"></p>
+    <input class="btn btn-default" type="submit" value="Insert">
   </form>
-</div>
-<div class= "New Employee">
-  <a href="{{url_for('new_employee')}}">
-      <input class="btn btn-primary btn-large" type="submit" value="Add new employee">
-  </a>
+  {% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+  {% endif %}
 </div>
 <div class="results_table">
   <h3>People Added</h3>
@@ -44,5 +47,4 @@
   {% if posts.has_prev %}<a href="{{ url_for('people', page=posts.prev_num) }}">&lt;&lt; Previous</a>{% else %}&lt;&lt; Previous{% endif %} |
   {% if posts.has_next %}<a href="{{ url_for('people', page=posts.next_num) }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
 </div>
-
 {% endblock %}
