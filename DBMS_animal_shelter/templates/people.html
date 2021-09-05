@@ -11,12 +11,17 @@
     <input class="btn btn-default" type="submit" value="Search">
   </form>
 </div>
-
+<div class= "New User">
+  <a href="{{url_for('new_person')}}">
+      <input class="btn btn-primary btn-large" type="submit" value="Add new person">
+  </a>
+</div>
 <div class="results_table">
   <h3>People Added</h3>
   <br>
   <table>
   <tr>
+    <th>Id</th>
     <th>First Name</th>
     <th>Last Name</th>
     <th>Phone Number</th>
@@ -26,6 +31,7 @@
   </tr>
   {% for post in posts.items %}
     <tr>
+      <th>{{post.PersonID}}</th>
       <th>{{post.FirstName}}</th>
       <th>{{post.LastName}}</th>
       <th>{{post.Phone}}</th>
