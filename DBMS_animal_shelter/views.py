@@ -16,6 +16,8 @@ Base.prepare(db.engine, reflect = True)
 
 Person = Base.classes.person
 Employee = Base.classes.employee
+Vet = Base.classes.vet
+Animal = Base.classes.animal
 # use Base.classes.<table name> for the class
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -54,26 +56,80 @@ def dashboard():
     )
 
 @app.route('/animals',methods=['POST','GET'])
-def animals():
+@app.route('/animals/<int:page>', methods=['POST','GET'])
+def animals(page = 1):
+    per_page = 20
+    query = db.session.query(Animal).paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Animal).filter(Animal.Name==input_query)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "animals.html",
+            title = 'Animals',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
     return render_template(
-        'animals.html',
-        title='Animals',
-        year=datetime.now().year
+        "animals.html",
+        title = 'Animals',
+        year=datetime.now().year,
+        error = error,
+        posts = query
     )
 
 @app.route('/vets',methods=['POST','GET'])
-def vets():
+@app.route('/vets/<int:page>',methods=['POST','GET'])
+def vets(page = 1):
+    query = db.session.query(Vet)
+    print(inspect(query))
+    per_page = 20
+    query = db.session.query(Vet)\
+        .join(Person, Person.PersonID ==Vet.PersonID)\
+        .add_columns(Person.FirstName,
+                     Person.LastName,
+                     Person.Phone,
+                     Vet.VetID,
+                     Vet.OfficeContact) \
+        .paginate(page, per_page, error_out=False)
+
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Vet)\
+            .join(Person, Person.PersonID ==Vet.PersonID)\
+            .add_columns(Person.FirstName,
+                         Person.LastName,
+                         Person.Phone,
+                         Vet.RegNo,
+                         Vet.OfficeContact,
+                         Vet.VetID) \
+            .filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+            .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "vets.html",
+            title = 'Vets',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
     return render_template(
-        'vets.html',
-        title='Vets',
-        year=datetime.now().year
+        "vets.html",
+        title = 'Vets',
+        year=datetime.now().year,
+        error = error,
+        posts = query
     )
 
 @app.route('/employees',methods=['POST','GET'])
 @app.route('/employees/<int:page>', methods=['POST','GET'])
 def employees(page=1):
     per_page = 20
-    #query = db.session.query(Person).paginate(page, per_page, error_out=False)
     query = db.session.query(Employee)\
         .join(Person, Person.PersonID ==Employee.PersonID)\
         .add_columns(Person.FirstName,
@@ -114,8 +170,99 @@ def employees(page=1):
         posts = query
     )
 
-@app.route('/new_employee', methods=['POST', 'GET'])
-@app.route('/new_employee/<int:page>', methods=['POST', 'GET'])
+@app.route('/people', methods= ['POST', 'GET'])
+@app.route('/people/<int:page>', methods=['POST', 'GET'])
+def people(page = 1):
+    per_page = 20
+    query = db.session.query(Person).paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Person).filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+        .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "people.html",
+            title = 'People',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "people.html",
+        title = 'People',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/animals/new', methods=['POST', 'GET'])
+@app.route('/animals/new/<int:page>', methods=['POST', 'GET'])
+def new_animal(page=1):
+    per_page = 5
+    query = db.session.query(Animal).paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        name = request.form['name']
+        DateOfBirth = request.form['dob']
+        Gender = request.form['gender']
+        Breed = request.form['breed']
+        Weight = request.form['weight']
+        Healthy = request.form['healthy']
+        animal = Animal(Name = name,
+                        DateOfBirth = DateOfBirth,
+                        Gender = Gender,
+                        Breed = Breed,
+                        Weight = Weight,
+                        Healthy = Healthy)
+
+        db.session.add(animal)
+        db.session.commit()
+        return redirect(url_for('new_animal'))
+
+    return render_template(
+        "new_animal.html",
+        title = 'New Animal',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/vets/new', methods=['POST', 'GET'])
+@app.route('/vets/new/<int:page>', methods=['POST', 'GET'])
+def new_vet(page = 1):
+    per_page = 5
+    query = db.session.query(Vet)\
+        .join(Person, Person.PersonID ==Vet.PersonID)\
+        .add_columns(Person.FirstName,
+                     Person.LastName,
+                     Person.Phone,
+                     Vet.VetID,
+                     Vet.OfficeContact) \
+        .paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        personID = request.form['pID']
+        regNo = request.form['RegNo']
+        contact = request.form['OfficePh']
+
+        vet = Vet(PersonID = personID, OfficeContact = contact, RegNo = regNo)
+
+        db.session.add(vet)
+        db.session.commit()
+        return redirect(url_for('new_vet'))
+
+    return render_template(
+        "new_vet.html",
+        title = 'New Vet',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/employees/new', methods=['POST', 'GET'])
+@app.route('/employees/new/<int:page>', methods=['POST', 'GET'])
 def new_employee(page = 1):
     per_page = 5
     query = db.session.query(Employee)\
@@ -149,35 +296,8 @@ def new_employee(page = 1):
         posts = query
     )
 
-@app.route('/people', methods= ['POST', 'GET'])
-@app.route('/people/<int:page>', methods=['POST', 'GET'])
-def people(page = 1):
-    per_page = 20
-    query = db.session.query(Person).paginate(page, per_page, error_out=False)
-    error = None
-    if request.method=='POST':
-        input_query = request.form['query']
-        result =  db.session.query(Person).filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
-        .paginate(page, per_page, error_out=False)
-        if len(input_query)==0 or input_query == 'all':
-            result = query
-        return render_template(
-            "people.html",
-            title = 'People',
-            year=datetime.now().year,
-            error = error,
-            posts = result
-        )
-    return render_template(
-        "people.html",
-        title = 'People',
-        year=datetime.now().year,
-        error = error,
-        posts = query
-    )
-
-@app.route('/new_person', methods= ['POST', 'GET'])
-@app.route('/new_person/<int:page>', methods=['POST', 'GET'])
+@app.route('/people/new', methods= ['POST', 'GET'])
+@app.route('/people/new/<int:page>', methods=['POST', 'GET'])
 def new_person(page = 1):
     per_page = 5
     query = db.session.query(Person).paginate(page, per_page, error_out=False)
@@ -203,15 +323,12 @@ def new_person(page = 1):
         posts = query
     )
 
-@app.route('/people/person/<int:id>', methods=['POST', 'GET'])
-def person(id):
-    query = db.session.query(Person).filter_by(PersonID=id)
-    return render_template(
-        'person.html',
-        title= 'Profile',
-        year=datetime.now().year,
-        data = query[0]
-    )
+@app.route('/animals/animal/<int:id>', methods=['POST','GET'])
+def animal(id):
+    return render_template('layout.html')
+@app.route('/vets/vet/<int:id>',methods=['POST','GET'])
+def vet(id):
+    return render_template('layout.html')
 
 @app.route('/employees/employee/<int:id>', methods=['POST','GET'])
 def worker(id):
@@ -220,5 +337,15 @@ def worker(id):
         'person.html',
         title= 'Profile',
         year= datetime.now().year,
+        data = query[0]
+    )
+
+@app.route('/people/person/<int:id>', methods=['POST', 'GET'])
+def person(id):
+    query = db.session.query(Person).filter_by(PersonID=id)
+    return render_template(
+        'person.html',
+        title= 'Profile',
+        year=datetime.now().year,
         data = query[0]
     )
