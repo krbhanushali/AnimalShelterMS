@@ -1,4 +1,4 @@
-# # AnimalShelterMS
+# AnimalShelterMS
 This project is a DBMS for an Animal Shelter which aims to manage data about medical records, adoptions and daily needs of animals and the various employees and vets associated with the Shelter.
 # How to use
 0. Download the code and install all the requirements.
