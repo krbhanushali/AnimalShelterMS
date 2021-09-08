@@ -200,6 +200,138 @@ def people(page = 1):
         posts = query
     )
 
+@app.route('/tasks', methods= ['POST', 'GET'])
+@app.route('/tasks/<int:page>', methods=['POST', 'GET'])
+def tasks(page = 1):
+    per_page = 20
+    query = db.session.query(Employee)\
+        .join(Person, Person.PersonID ==Employee.PersonID)\
+        .add_columns(Person.FirstName,
+                     Person.LastName,
+                     Person.Phone,
+                     Employee.WorkerID,
+                     Employee.Salary,
+                     Employee.CompanyEmail) \
+        .paginate(page, per_page, error_out=False)
+
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Employee)\
+            .join(Person, Person.PersonID ==Employee.PersonID)\
+            .add_columns(Person.FirstName,
+                         Person.LastName,
+                         Person.Phone,
+                         Employee.WorkerID,
+                         Employee.Salary,
+                         Employee.CompanyEmail) \
+            .filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+            .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "employees.html",
+            title = 'Tasks',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "employees.html",
+        title = 'Tasks',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/adoptions', methods= ['POST', 'GET'])
+@app.route('/adoptions/<int:page>', methods=['POST', 'GET'])
+def adoptions(page = 1):
+    per_page = 20
+    query = db.session.query(Employee)\
+        .join(Person, Person.PersonID ==Employee.PersonID)\
+        .add_columns(Person.FirstName,
+                     Person.LastName,
+                     Person.Phone,
+                     Employee.WorkerID,
+                     Employee.Salary,
+                     Employee.CompanyEmail) \
+        .paginate(page, per_page, error_out=False)
+
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Employee)\
+            .join(Person, Person.PersonID ==Employee.PersonID)\
+            .add_columns(Person.FirstName,
+                         Person.LastName,
+                         Person.Phone,
+                         Employee.WorkerID,
+                         Employee.Salary,
+                         Employee.CompanyEmail) \
+            .filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+            .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "employees.html",
+            title = 'Adoptions',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "employees.html",
+        title = 'Adoptions',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/medicalrecords', methods= ['POST', 'GET'])
+@app.route('/medicalrecords/<int:page>', methods=['POST', 'GET'])
+def medicalrecords(page = 1):
+    per_page = 20
+    query = db.session.query(Employee)\
+        .join(Person, Person.PersonID ==Employee.PersonID)\
+        .add_columns(Person.FirstName,
+                     Person.LastName,
+                     Person.Phone,
+                     Employee.WorkerID,
+                     Employee.Salary,
+                     Employee.CompanyEmail) \
+        .paginate(page, per_page, error_out=False)
+
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Employee)\
+            .join(Person, Person.PersonID ==Employee.PersonID)\
+            .add_columns(Person.FirstName,
+                         Person.LastName,
+                         Person.Phone,
+                         Employee.WorkerID,
+                         Employee.Salary,
+                         Employee.CompanyEmail) \
+            .filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+            .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "employees.html",
+            title = 'Medical Records',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "employees.html",
+        title = 'Medical Records',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
 @app.route('/animals/new', methods=['POST', 'GET'])
 @app.route('/animals/new/<int:page>', methods=['POST', 'GET'])
 def new_animal(page=1):
@@ -326,6 +458,87 @@ def new_person(page = 1):
         posts = query
     )
 
+@app.route('/tasks/new', methods= ['POST', 'GET'])
+@app.route('/tasks/new/<int:page>', methods=['POST', 'GET'])
+def new_task(page = 1):
+    per_page = 20
+    query = db.session.query(Person).paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Person).filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+        .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "people.html",
+            title = 'People',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "people.html",
+        title = 'People',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/adoptions/new', methods= ['POST', 'GET'])
+@app.route('/adoptions/new/<int:page>', methods=['POST', 'GET'])
+def new_adoption(page = 1):
+    per_page = 20
+    query = db.session.query(Person).paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Person).filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+        .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "people.html",
+            title = 'People',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "people.html",
+        title = 'People',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
+@app.route('/medicalrecords/new', methods= ['POST', 'GET'])
+@app.route('/medicalrecords/new/<int:page>', methods=['POST', 'GET'])
+def new_record(page = 1):
+    per_page = 20
+    query = db.session.query(Person).paginate(page, per_page, error_out=False)
+    error = None
+    if request.method=='POST':
+        input_query = request.form['query']
+        result =  db.session.query(Person).filter(or_((Person.FirstName==input_query),(Person.LastName==input_query)))\
+        .paginate(page, per_page, error_out=False)
+        if len(input_query)==0 or input_query == 'all':
+            result = query
+        return render_template(
+            "people.html",
+            title = 'People',
+            year=datetime.now().year,
+            error = error,
+            posts = result
+        )
+    return render_template(
+        "people.html",
+        title = 'People',
+        year=datetime.now().year,
+        error = error,
+        posts = query
+    )
+
 @app.route('/animals/animal/<int:id>', methods=['POST','GET'])
 def animal(id):
     return render_template('layout.html')
@@ -345,6 +558,36 @@ def worker(id):
 
 @app.route('/people/person/<int:id>', methods=['POST', 'GET'])
 def person(id):
+    query = db.session.query(Person).filter_by(PersonID=id)
+    return render_template(
+        'person.html',
+        title= 'Profile',
+        year=datetime.now().year,
+        data = query[0]
+    )
+
+@app.route('/tasks/task/<int:id>', methods=['POST', 'GET'])
+def task(id):
+    query = db.session.query(Person).filter_by(PersonID=id)
+    return render_template(
+        'person.html',
+        title= 'Profile',
+        year=datetime.now().year,
+        data = query[0]
+    )
+
+@app.route('/medicalrecords/record/<int:id>', methods=['POST', 'GET'])
+def record(id):
+    query = db.session.query(Person).filter_by(PersonID=id)
+    return render_template(
+        'person.html',
+        title= 'Profile',
+        year=datetime.now().year,
+        data = query[0]
+    )
+
+@app.route('/adoptions/adoption/<int:id>', methods=['POST', 'GET'])
+def adoption(id):
     query = db.session.query(Person).filter_by(PersonID=id)
     return render_template(
         'person.html',
