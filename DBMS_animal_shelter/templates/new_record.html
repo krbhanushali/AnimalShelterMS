@@ -1,0 +1,59 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+<div class="container">
+  <h3>Add New Task</h3>
+  <br>
+  <form action="" method="post" id="new_record">
+    <p>Vet ID: <input type="number" required placeholder="Vet's ID" name="vID" value="{{
+      request.form.vID }}"></p>
+    <p>Animal: <input type="number" placeholder="AnimalID" name="aID" value="{{
+      request.form.aID }}"></p>
+    <p>TypeOfVisit:
+      <select id="visitType" name="visitType">
+          <option value="Regular Checkup">Regular Checkup</option>
+          <option value="Vaccination">Vaccination</option>
+          <option value="Spay/Neuter">Spay/Neuter</option>
+          <option value="Illness">Illness</option>
+      </select>
+    </p>
+    <p>Healthy:
+      <input type="radio" name="healthy" id="healthy" value=1> Yes </input>
+      <input type="radio" name="healthy" id="nothealthy" value=0> No </input>
+    </p>
+    <p>Comments:
+      <textarea rows="4" cols="50" name="comment" form="new_record"> Enter text here...</textarea>
+    </p>
+    <input class="btn btn-default" type="submit" value="Insert">
+  </form>
+  {% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+  {% endif %}
+</div>
+<div class="results_table">
+  <h3>Records Added</h3>
+  <br>
+  <table>
+  <tr>
+    <th>Vet</th>
+    <th>Animal</th>
+    <th>Time</th>
+    <th>VisitType</th>
+    <th>Healthy</th>
+    <th>Links</th>
+  </tr>
+  {% for post in posts.items %}
+    <tr>
+      <th>{{post.FirstName}} {{post.LastName}}</th>
+      <th>{{post.Name}}</th>
+      <th>{{post.Time}}</th>
+      <th>{{post.TypeOfVisit}}</th>
+      <th>{{post.Healthy}}</th>
+      <th><a href = "{{url_for('record', id = post.RecordID)}}">details</a></th>
+    </tr>
+  {% endfor %}
+  </table>
+  {% if posts.has_prev %}<a href="{{ url_for('new_record', page=posts.prev_num) }}">&lt;&lt; Previous</a>{% else %}&lt;&lt; Previous{% endif %} |
+  {% if posts.has_next %}<a href="{{ url_for('new_record', page=posts.next_num) }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
+</div>
+{% endblock %}

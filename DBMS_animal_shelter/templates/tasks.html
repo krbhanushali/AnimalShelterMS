@@ -1,0 +1,43 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+<div class="search bar">
+  <h3>Search for Task</h3>
+  <br>
+  <form method="post" action="">
+    <p>Search by FirstName or LastName of the Employee or Name of the animal</p>
+     <input type="text" name="query" default="all" value="{{
+        request.form.query }}">
+    <input class="btn btn-default" type="submit" value="Search">
+  </form>
+</div>
+<div class= "New User">
+  <a href="{{url_for('new_task')}}">
+      <input class="btn btn-primary btn-large" type="submit" value="Add new Task">
+  </a>
+</div>
+<div class="results_table">
+  <h3>Tasks Added</h3>
+  <br>
+  <table>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Task</th>
+    <th>Animal</th>
+    <th>Links</th>
+  </tr>
+  {% for post in posts.items %}
+    <tr>
+      <th>{{post.FirstName}}</th>
+      <th>{{post.LastName}}</th>
+      <th>{{post.Description}}</th>
+      <th>{{post.Name}}</th>
+      <th><a href = "{{url_for('task', id = post.Task)}}">details</a></th>
+    </tr>
+  {% endfor %}
+  </table>
+  {% if posts.has_prev %}<a href="{{ url_for('tasks', page=posts.prev_num) }}">&lt;&lt; Previous</a>{% else %}&lt;&lt; Previous{% endif %} |
+  {% if posts.has_next %}<a href="{{ url_for('tasks', page=posts.next_num) }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
+</div>
+{% endblock %}

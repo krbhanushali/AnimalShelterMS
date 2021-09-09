@@ -1,0 +1,44 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+<div class="search bar">
+  <h3>Search for Adoption Record</h3>
+  <br>
+  <form method="post" action="">
+    <p>Search by Name of Adopter, Overseer or Animal</p>
+     <input type="text" name="query" default="all" value="{{
+        request.form.query }}">
+    <input class="btn btn-default" type="submit" value="Search">
+  </form>
+</div>
+<div class= "New User">
+  <a href="{{url_for('new_adoption')}}">
+      <input class="btn btn-primary btn-large" type="submit" value="Process New Adoption">
+  </a>
+</div>
+<div class="results_table">
+  <h3>Adoptions</h3>
+  <br>
+  <table>
+  <tr>
+    <th>Animal</th>
+    <th>Adopted By</th>
+    <th>Overseen By</th>
+    <th>Date of Adoption</th>
+    <th>Link</th>
+  </tr>
+  {% for post in posts.items %}
+    <tr>
+      <th>{{post.Name}}</th>
+      <th>{{post.Adopter_name_f}} {{post.Adopter_name_s}}</th>
+      <th>{{post.FirstName}} {{post.LastName}}</th>
+      <th>{{post.DateOfAdoption}}</th>
+      <th><a href = "{{url_for('adoption', id = post.AdoptionID)}}">details</a></th>
+    </tr>
+  {% endfor %}
+  </table>
+  {% if posts.has_prev %}<a href="{{ url_for('adoptions', page=posts.prev_num) }}">&lt;&lt; Previous</a>{% else %}&lt;&lt; Previous{% endif %} |
+  {% if posts.has_next %}<a href="{{ url_for('adoptions', page=posts.next_num) }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
+</div>
+
+{% endblock %}
